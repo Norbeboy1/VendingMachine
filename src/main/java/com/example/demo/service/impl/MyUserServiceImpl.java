@@ -2,6 +2,7 @@ package com.example.demo.service.impl;
 
 import com.example.demo.converter.UserConverter;
 import com.example.demo.dto.MyUserDto;
+import com.example.demo.exception.MyUserNotFoundException;
 import com.example.demo.model.MyUser;
 import com.example.demo.repository.MyUserRepository;
 import com.example.demo.service.MyUserService;
@@ -21,7 +22,8 @@ public class MyUserServiceImpl implements MyUserService {
 
     @Override
     public MyUserDto getMyUser(Principal principal) {
-        return userConverter.from(myUserRepository.findByUsername(principal.getName()).get());
+        return userConverter.from(myUserRepository.findByUsername(
+                principal.getName()).orElseThrow(()-> new MyUserNotFoundException(principal.getName())));
     }
 
     @Override
